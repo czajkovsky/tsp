@@ -4,5 +4,6 @@
 #include "bruteForce.h"
 #include "nearestNeighbour.h"
 #include "GA.h"
+#include "antColony.h"
 
 #endif

@@ -36,7 +36,9 @@ vi neighbour(vi &s, const int &n) {
 	while (a == b) {
 		b = rand() % n;
 	}
+	//if (a > b) swap(a,b); // zakomenowana metoda alternatywna - obecna daje trochę lepsze wyniki
 	vi res = s;
+	//random_shuffle(res.begin()+a, res.begin()+b);
 	swap(res[a], res[b]);
 	return res;
 }

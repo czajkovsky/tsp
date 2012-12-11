@@ -5,5 +5,6 @@
 #include "nearestNeighbour.h"
 #include "GA.h"
 #include "antColony.h"
+#include "simulatedAnnealing.h"
 
 #endif

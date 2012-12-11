@@ -3,11 +3,13 @@
 #include <ctime>
 using namespace std;
 
-const int n = 20000;
 const int max_d = 100;
 
 int main() {
 	srand(time(0));
+
+	int n;
+	scanf("%d", &n);
 
 	printf("%d\n", n);
 

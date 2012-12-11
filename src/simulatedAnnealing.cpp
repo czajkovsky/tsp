@@ -1,4 +1,5 @@
 #include "simulatedAnnealing.h"
+#include "nearestNeighbour.h"
 #include <algorithm>
 #include <cstdio>
 #include <cstdlib>
@@ -9,7 +10,7 @@
 
 typedef vector<int> vi;
 
-const int steps = 100000;
+const int steps = 200;
 vi sbest;
 int ebest;
 
@@ -21,13 +22,14 @@ int energy(vector<int> v, const int &n, int **adjacencyMatrix) {
         return res;
 }
 
-void generate(vi &s, const int &n) {
-	s.reserve(n);
-	REP(i,n) {
-		s.push_back(i);
-	}
+void generate(int **adjacencyMatrix, vi &s, const int &n) {
+//	nearestNeighbour(adjacencyMatrix, n, s);
 
+	s.clear();
+	s.reserve(n);
+	REP(i,n) s.push_back(i);
 	random_shuffle(s.begin(), s.end());
+
 }
 
 vi neighbour(vi &s, const int &n) {
@@ -43,36 +45,56 @@ vi neighbour(vi &s, const int &n) {
 	return res;
 }
 
-double P(int e, int enew, double T) {
-	if (enew < e) return 1;
-	else return exp((double)(enew-e)/T);
+double P(int delta, double T) {
+	return exp((double)(-delta)/T);
+}
+
+double alfa(double t) {
+	const double b = 0.0001;
+
+	return t/(1+b*t);
 }
 
 int simulatedAnnealing(int **adjacencyMatrix, const int &n, vi &result) {
 	srand(time(0));
 	vi s;
 
-	generate(s,n);
+
+	generate(adjacencyMatrix,s,n);
 	int e = energy(s, n, adjacencyMatrix);	
 
 	sbest = s;
 	ebest = e;
-
+	
 	vi snew;
 	int enew;
 
+	double t = 100000000;
+
+	int L = 10000;
+
 	REP(k,steps) {
-		double T = (double)k/steps;
-		snew = neighbour(s, n);
-		enew = energy(snew, n, adjacencyMatrix);
-		if (P(e,enew,T) > (double)rand()/RAND_MAX) {
-			s = snew;
-			e = enew;
+		REP(j,L) {
+			snew = neighbour(s, n);
+			enew = energy(snew, n, adjacencyMatrix);
+			if (enew < ebest) {
+				ebest = enew;
+				sbest = snew;
+			}
+			int delta = enew - e;
+			if (delta < 0) {
+				e = enew;
+				s = snew;
+			}
+			else {
+				double x = (double)rand() / RAND_MAX;
+				if (x < P(delta,t)) {
+					s = snew;
+					e = enew;
+				}
+			}
 		}
-		if (enew < ebest) {
-			sbest = snew;
-			ebest = enew;
-		}
+		t = alfa(t);
 	}
 
 

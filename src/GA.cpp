@@ -9,8 +9,8 @@
 #define FOR(i,k,n) for (int(i)=(k); (i)<=(n); (i)++)
 #define INF 1e9
 
-const int population_size = 400;
-const int steps = 35;
+const int population_size = 500;
+const int steps = 300;
 
 typedef vector<int> vi;
 typedef pair<vi,int> pvi;
@@ -205,7 +205,7 @@ void crossover(const int &n, int **adjacencyMatrix) {
 	}
 }
 
-void selection() { // na razie metoda własna :D (1/4 najlepszych + 1/4 ruletka + nie mogą się powtarzać)	
+void selection(const int &n, int **adjacencyMatrix) { // na razie metoda własna :D (1/4 najlepszych + 1/4 ruletka + nie mogą się powtarzać)	
 	sort(population.begin(), population.end(), cmp);
 	
 	int pop_size = population.size();
@@ -215,7 +215,7 @@ void selection() { // na razie metoda własna :D (1/4 najlepszych + 1/4 ruletka 
 	memset(taken,0,pop_size*sizeof(bool));
 	
 	int count = 0;
-	REP(i,pop_size/4) {
+	REP(i,pop_size/16) {
 		new_population.push_back(population[i]);
 		count++;
 	}
@@ -232,7 +232,7 @@ void selection() { // na razie metoda własna :D (1/4 najlepszych + 1/4 ruletka 
 	
 	int pos;
 	double prob;
-	while (count < pop_size/2) {
+	while (count < pop_size/6) {
 		//pos = rand() % pop_size;
 		do {
 		prob = (double)rand() / RAND_MAX;
@@ -244,6 +244,14 @@ void selection() { // na razie metoda własna :D (1/4 najlepszych + 1/4 ruletka 
 		new_population.push_back(population[pos]);
 		count++;
 	}
+
+	while (count < pop_size/2) {
+		random_shuffle(population[pos].first.begin(), population[pos].first.end());
+		population[pos].second = calculate(population[pos].first, n, adjacencyMatrix);
+		new_population.push_back(population[pos]);
+		count++;
+	}
+
 	population.clear();
 	population.assign(new_population.begin(), new_population.end());
 }
@@ -271,7 +279,7 @@ int GA(int **adjacencyMatrix, const int &n, vi &result) {
 		
 		judge(n, adjacencyMatrix);
 		
-		selection();
+		selection(n, adjacencyMatrix);
 		
 		crossover(n, adjacencyMatrix);
 		

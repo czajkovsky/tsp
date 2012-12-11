@@ -1,6 +1,7 @@
 #include "nearestNeighbour.h"
 #include <cstring>
 #include <cstdio>
+#include <algorithm>
 
 int nearestNeighbour(int **adjacencyMatrix, const int &n, vector<int> &result) {
 	int res=0;
@@ -31,10 +32,11 @@ int nearestNeighbour(int **adjacencyMatrix, const int &n, vector<int> &result) {
 		visited[minw] = 1;
 		res += minv;
 		pos = minw;
+//		printf("%d\n", res);
 	}
 
 	res += adjacencyMatrix[minw][0];
 	
-	delete(visited);
+	delete [ ] visited;
 	return res;
 }

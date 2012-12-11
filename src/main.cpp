@@ -32,23 +32,23 @@ int main() {
 	printf("Brute Force: %d\n", bF);
 	*/
 
-	/*
+	
 	int nN = nearestNeighbour(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Nearest Neighbour: %d\n", nN);
-	*/
+	
 
-	/*
+	
 	int gA = GA(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Genetic Algorithm: %d\n", gA);
-	*/
 	
-	/*
+	
+	
 	int aC = antColony(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Ant Colony: %d\n", aC);
-	*/
+	
 
 	int sA = simulatedAnnealing(adjacencyMatrix, n, result);
 	//print(result);

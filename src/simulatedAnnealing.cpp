@@ -10,7 +10,9 @@
 
 typedef vector<int> vi;
 
-const int steps = 200;
+const int steps = 150;
+const int L = 7000;
+
 vi sbest;
 int ebest;
 
@@ -50,7 +52,7 @@ double P(int delta, double T) {
 }
 
 double alfa(double t) {
-	const double b = 0.0001;
+	const double b = 0.00024;
 
 	return t/(1+b*t);
 }
@@ -70,8 +72,6 @@ int simulatedAnnealing(int **adjacencyMatrix, const int &n, vi &result) {
 	int enew;
 
 	double t = 100000000;
-
-	int L = 10000;
 
 	REP(k,steps) {
 		REP(j,L) {

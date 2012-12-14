@@ -9,8 +9,9 @@
 #define FOR(i,k,n) for (int(i)=(k); (i)<=(n); (i)++)
 #define INF 1e9
 
-const int population_size = 500;
-const int steps = 300;
+const int population_size = 6100;
+const int new_population_size = 3500;
+const int steps = 2500;
 
 typedef vector<int> vi;
 typedef pair<vi,int> pvi;
@@ -42,13 +43,9 @@ void generate(const int &n, int **adjacencyMatrix) {
 	population.reserve(population_size);
 	new_population.reserve(population_size);
 	tmp.reserve(n);
+	tmp.clear();
+	REP(i,n) tmp.push_back(i);
 	REP(i,population_size) {
-		tmp.clear();
-		//population[i].reserve(n);
-		REP(j,n) {
-			tmp.push_back(j);
-			//population[i].push_back(j);
-		}
 		population.push_back(make_pair(tmp,calculate(tmp,n,adjacencyMatrix)));
 		random_shuffle(population[i].first.begin(), population[i].first.end());
 	}
@@ -58,11 +55,9 @@ void generate(const int &n, int **adjacencyMatrix) {
 		_print(population[i].first);
 	}*/
 	
-	tmp.reserve(n);
 	tmp2.reserve(n);
 	tmp3.reserve(n);
 	REP(i,n) {
-		tmp.push_back(i);
 		tmp2.push_back(i);
 		tmp3.push_back(i);
 	}
@@ -195,7 +190,7 @@ void crossover(const int &n, int **adjacencyMatrix) {
 	REP(i,population_size-pop_size) {
 		a = rand()%pop_size;
 		b = rand()%pop_size;
-		if (a == b) {b++;b%=pop_size;}
+		while (a == b) {b++;b%=pop_size;}
 		//printf("a:%d b:%d\n", a, b);
 		//_print(population[a].first);
 		vi c = OX(population[a].first, population[b].first, n);
@@ -205,101 +200,122 @@ void crossover(const int &n, int **adjacencyMatrix) {
 	}
 }
 
+vi bestpopulation;
+int bestresult;
+
 void selection(const int &n, int **adjacencyMatrix) { // na razie metoda własna :D (1/4 najlepszych + 1/4 ruletka + nie mogą się powtarzać)	
 	sort(population.begin(), population.end(), cmp);
+
+	if (population[0].second < bestresult) {
+		bestpopulation = population[0].first;
+		bestresult = population[0].second;
+	}
 	
-	int pop_size = population.size();
 	new_population.clear();
-	
-	bool *taken = new bool[pop_size];
-	memset(taken,0,pop_size*sizeof(bool));
-	
-	int count = 0;
-	REP(i,pop_size/16) {
+
+	int count=0;	
+	REP(i,population_size) {
 		new_population.push_back(population[i]);
 		count++;
 	}
-	
-	random_shuffle(population.begin(), population.end());
-	vector<double> dystrybuanta;
-	dystrybuanta.resize(pop_size);
-	
-	double adapt = calc_adaptation();
-	dystrybuanta[0] = (double)adaptation[0]/adapt;
-	FOR(i,1,pop_size-1) {
-		dystrybuanta[i] = dystrybuanta[i-1] + (double)adaptation[i]/adapt;
-	}
-	
-	int pos;
-	double prob;
-	while (count < pop_size/6) {
-		//pos = rand() % pop_size;
-		do {
-		prob = (double)rand() / RAND_MAX;
-		pos = (int)(upper_bound(dystrybuanta.begin(), dystrybuanta.end(), prob) - dystrybuanta.begin());
-		} while (taken[pos]);
-		
-		taken[pos] = true;
 
-		new_population.push_back(population[pos]);
-		count++;
-	}
-
-	while (count < pop_size/2) {
-		random_shuffle(population[pos].first.begin(), population[pos].first.end());
-		population[pos].second = calculate(population[pos].first, n, adjacencyMatrix);
-		new_population.push_back(population[pos]);
+	while (count < population_size) {
+		random_shuffle(population[0].first.begin(), population[0].first.end());
+		population[0].second = calculate(population[0].first, n, adjacencyMatrix);
+		new_population.push_back(population[0]);
 		count++;
 	}
 
 	population.clear();
-	population.assign(new_population.begin(), new_population.end());
+	population = new_population;
 }
 
-void mutation(const int &n, int **adjacencyMatrix) {
-	REP(i,population_size) {
+void mutation(vi &v, const int &n) {
+
 		double prob = (double)rand() / RAND_MAX;
-		//prob = 0.0;
-		if (prob > 0.95) inversion_mutation(population[i].first, n);
-		else if (prob > 0.9) swap_mutation(population[i].first, n);
-		else if (prob > 0.85) displacement_mutation(population[i].first, n);
+		if (prob > 0.7) inversion_mutation(v, n);
+		else if (prob > 0.4) swap_mutation(v, n);
+		else displacement_mutation(v, n);
 		//else if (prob > 0.4) scramble_mutation(population[i].first, n);					
-	}
+	
 }
 
 void judge(const int &n, int **adjacencyMatrix) {
 	REP(i,population_size) population[i].second = calculate(population[i].first, n, adjacencyMatrix);
 }
 
+void reproduction(const int &n, int **adjacencyMatrix) {
+	for (int j=0; j<new_population_size; j+=2) {
+		int a = rand()%population_size;
+		int b = rand()%population_size;
+		while (a==b) b = rand()%population_size;
+
+		double r = (double)rand()/RAND_MAX;
+		double r1 = (double)rand()/RAND_MAX/10;
+		double r2 = (double)rand()/RAND_MAX/10;
+		
+		vi v1,v2;
+		v1.resize(n);
+		v2.resize(n);
+		REP(i,n) {
+			v1[i] = v2[i] = i;
+		}
+		
+		random_shuffle(v1.begin(), v1.end());
+		random_shuffle(v2.begin(), v2.end());
+
+		if ((double)rand()/RAND_MAX <= r) {
+			v1 = OX(population[a].first, population[b].first, n);
+			v2 = OX(population[b].first, population[a].first, n);			
+		}
+		if ((double)rand()/RAND_MAX <= r1) {
+			mutation(v1, n);
+		}
+		if ((double)rand()/RAND_MAX <= r2) {
+			mutation(v2, n);
+		}
+		population.push_back(make_pair(v1, calculate(v1, n, adjacencyMatrix)));
+		population.push_back(make_pair(v2, calculate(v2, n, adjacencyMatrix)));
+	}
+}
+
 int GA(int **adjacencyMatrix, const int &n, vi &result) {
 	srand(time(0));
 	generate(n,adjacencyMatrix);	
 	
+	sort(population.begin(), population.end(), cmp);
+	bestpopulation = population[0].first;
+	bestresult = population[0].second;
+
+	random_shuffle(population.begin(), population.end());
+
 	REP(s,steps) {
 		
 		judge(n, adjacencyMatrix);
 		
 		selection(n, adjacencyMatrix);
 		
-		crossover(n, adjacencyMatrix);
+		reproduction(n, adjacencyMatrix);
+
+		/*crossover(n, adjacencyMatrix);
 		
 		mutation(n, adjacencyMatrix);
-		
+		*/
 		/*REP(i,population.size()) {
 			printf("i%d: ", i);
 			_print(population[i].first);
 		}*/		
 	}
-	int res = INF, where = -1;
-	REP(i,population.size()) {
-		int calc = calculate(population[i].first,n,adjacencyMatrix);
-		if (res > calc) {
-			res = calculate(population[i].first,n,adjacencyMatrix);
-			where = i;
+	REP(i,(int)population.size()) {
+		if (population[i].second < bestresult) {
+			bestresult = population[i].second;
+			bestpopulation = population[i].first;
 		}
 	}
+
+//	printf("%d\n", (int)population.size());
 	
-	result = population[where].first;
+	result = bestpopulation; 
 	
-	return res;
+	return bestresult;
 }

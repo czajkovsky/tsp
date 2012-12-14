@@ -1,6 +1,7 @@
 #include <cstdio>
 #include "main.h"
 #include <vector>
+#include <algorithm>
 
 void print(vector<int> v) {
 	for (vector<int>::iterator it = v.begin(); it != v.end(); it++) {
@@ -36,23 +37,22 @@ int main() {
 	int nN = nearestNeighbour(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Nearest Neighbour: %d\n", nN);
-	
 
 	
 	int gA = GA(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Genetic Algorithm: %d\n", gA);
 	
-	
-	
+	/*
 	int aC = antColony(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Ant Colony: %d\n", aC);
+	*/
 	
-
 	int sA = simulatedAnnealing(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Simulated Annealing: %d\n", sA);
+	
 
 	for (int i=0; i<n; i++) {
 		delete [ ] adjacencyMatrix[i];

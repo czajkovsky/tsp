@@ -6,6 +6,5 @@
 #include "GA.h"
 #include "antColony.h"
 #include "simulatedAnnealing.h"
-#include "tabuSearch.h"
 
 #endif

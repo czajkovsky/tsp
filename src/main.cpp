@@ -58,11 +58,6 @@ int main() {
 	printf("Simulated Annealing: %d\n", sA);
 	*/
 
-	int tS = tabuSearch(adjacencyMatrix, n, result);
-	//print(result);
-	printf("Tabu Search: %d\n", tS);
-
-
 	for (int i=0; i<n; i++) {
 		delete [ ] adjacencyMatrix[i];
 	}

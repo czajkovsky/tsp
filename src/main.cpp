@@ -39,7 +39,7 @@ int main() {
 
 	/*
 	int gA = GA(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Genetic Algorithm: %d\n", gA);
 	*/
 

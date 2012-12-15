@@ -6,5 +6,6 @@
 #include "GA.h"
 #include "antColony.h"
 #include "simulatedAnnealing.h"
+#include "farthestInsertion.h"
 
 #endif

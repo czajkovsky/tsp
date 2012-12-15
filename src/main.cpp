@@ -47,9 +47,15 @@ int main() {
 	print(result);
 	printf("Ant Colony: %d\n", aC);
 
+	/*
 	int sA = simulatedAnnealing(adjacencyMatrix, n, result);
 	print(result);
 	printf("Simulated Annealing: %d\n", sA);
+	*/
+
+	int fI = farthestInsertion(adjacencyMatrix, n, result);
+	print(result);
+	printf("Farthest Insertion: %d\n", fI);
 
 	for (int i=0; i<n; i++) {
 		delete [ ] adjacencyMatrix[i];

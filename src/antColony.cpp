@@ -10,13 +10,13 @@
 
 #define INF 1e9
 /* best results for numOfAnts = number of cities */
-const int numOfAnts = 7; 
+const int numOfAnts = 5; 
 const int steps = 100;
 /* used in counting the probability of selecting edge */
 const double alfa = 1;
 const double beta = 3.5; 
 /* longest possible edge (used in initation of pheromons -> initPheromon) */
-const int longestEdge = 100;
+const int longestEdge = 1000;
 const double evaporation = 0.5;
 const double q=1;
 
@@ -154,6 +154,13 @@ int antColony(int **adjacencyMatrix, const int &n, vector<int> &result) {
 		
 	}
 	result=bestresdet;
-	
+
+	for (int i=0; i<n; i++) {
+		delete [ ] pheromon[i];
+		delete [ ] deltaPheromon[i];
+	}
+	delete [ ] pheromon;
+	delete [ ] deltaPheromon;
+
 	return bestres;
 }

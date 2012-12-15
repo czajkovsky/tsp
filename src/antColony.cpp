@@ -125,13 +125,11 @@ void print(ant ants[]) {
 
 int antColony(int **adjacencyMatrix, const int &n, vector<int> &result) {
 
-	int res=0;
-
 	srand(time(0));
 	result.clear();
 	result.reserve(n);
 
-	ant ants[numOfAnts];
+	ant ants[numOfAnts+1];
 
 	double **pheromon = new double*[n];
 	double **deltaPheromon = new double*[n];
@@ -156,5 +154,6 @@ int antColony(int **adjacencyMatrix, const int &n, vector<int> &result) {
 		
 	}
 	result=bestresdet;
+	
 	return bestres;
 }

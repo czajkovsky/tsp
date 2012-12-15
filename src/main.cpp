@@ -34,15 +34,15 @@ int main() {
 	*/
 
 	int nN = nearestNeighbour(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Nearest Neighbour: %d\n", nN);
-
+	/*
 	int gA = GA(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Genetic Algorithm: %d\n", gA);
-
+	*/
 	int aC = antColony(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Ant Colony: %d\n", aC);
 
 	int ile=20,best=100000,res;
@@ -52,11 +52,11 @@ int main() {
 	}
 	printf("Ant Colony: %d\n", best);
 
-	/*	
+		
 	int sA = simulatedAnnealing(adjacencyMatrix, n, result);
 	//print(result);
 	printf("Simulated Annealing: %d\n", sA);
-	*/
+	
 
 	for (int i=0; i<n; i++) {
 		delete [ ] adjacencyMatrix[i];

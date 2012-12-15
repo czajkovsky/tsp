@@ -4,8 +4,8 @@ LD=g++
 CFLAGS=-Wall
 LDFLAGS=-Wall
 
-SRCS=bruteForce.cpp nearestNeighbour.cpp MST_approx.cpp GA.cpp main.cpp antColony.cpp simulatedAnnealing.cpp tabuSearch.cpp
-HEADERS=bruteForce.h nearestNeighbour.h MST_approx.h GA.h main.h antColony.h simulatedAnnealing.h tabuSearch.h
+SRCS=bruteForce.cpp nearestNeighbour.cpp MST_approx.cpp GA.cpp main.cpp antColony.cpp simulatedAnnealing.cpp
+HEADERS=bruteForce.h nearestNeighbour.h MST_approx.h GA.h main.h antColony.h simulatedAnnealing.h
 TARGET=prog
 
 OBJS=$(addprefix ./obj/, $(addsuffix .o, $(SRCS)))

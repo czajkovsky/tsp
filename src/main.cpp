@@ -42,9 +42,17 @@ int main() {
 	print(result);
 	printf("Genetic Algorithm: %d\n", gA);
 
+	
 	int aC = antColony(adjacencyMatrix, n, result);
 	print(result);
 	printf("Ant Colony: %d\n", aC);
+
+	int ile=20,best=100000,res;
+	while(ile--) {
+		res=antColony(adjacencyMatrix, n, result);
+		if(best>res) best=res;
+	}
+	printf("Ant Colony: %d\n", best);
 	
 	return 0;
 }

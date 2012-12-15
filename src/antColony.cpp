@@ -10,11 +10,11 @@
 
 #define INF 1e9
 /* best results for numOfAnts = number of cities */
-const int numOfAnts = 12; 
+const int numOfAnts = 7; 
 const int steps = 100;
 /* used in counting the probability of selecting edge */
 const double alfa = 1;
-const double beta = 3; 
+const double beta = 3.5; 
 /* longest possible edge (used in initation of pheromons -> initPheromon) */
 const int longestEdge = 100;
 const double evaporation = 0.5;
@@ -37,9 +37,8 @@ void initAnts(ant ants[],const int &n) {
 		ants[i].cycleLength=0;
 		ants[i].startCity=rand()%n;
 		ants[i].curCity=ants[i].startCity;
-		for(int j=0; j<n; j++) ants[i].unVisitedCities.insert(j);
+		for(int j=0; j<n; j++) if(j!=ants[i].curCity) ants[i].unVisitedCities.insert(j);
 		ants[i].visitedCities.push_back(ants[i].startCity);
-		ants[i].unVisitedCities.erase(ants[i].startCity);
 	}
 }
 
@@ -62,6 +61,7 @@ void initPheromon(double **pheromon, double **deltaPheromon, int **adjacencyMatr
 		}
 	}
 }
+
 void closingCycle(ant &curAnt, double **deltaPheromon, int **adjacencyMatrix) {
 	curAnt.cycleLength+=adjacencyMatrix[curAnt.curCity][curAnt.startCity];
 	if(curAnt.cycleLength<bestres) {
@@ -72,6 +72,7 @@ void closingCycle(ant &curAnt, double **deltaPheromon, int **adjacencyMatrix) {
 	vector<int>::iterator it;
 	for(it=curAnt.visitedCities.begin(); it!=curAnt.visitedCities.end()-1; it++) {
 		deltaPheromon[(*it)][*(it+1)]+=q/double(curAnt.cycleLength);
+		//deltaPheromon[*(it+1)][*(it)]+=q/double(curAnt.cycleLength);
 	}
 }
 void nextCity(ant &curAnt, double **pheromon, int **adjacencyMatrix) {
@@ -100,9 +101,12 @@ void nextCity(ant &curAnt, double **pheromon, int **adjacencyMatrix) {
 
 void updatePheromon(double **pheromon, double **deltaPheromon, const int &n) {
 	for(int i=0; i<n; i++) {
-		for(int j=0; j<n; j++) {
+		for(int j=0; j<i; j++) {
+			//pheromon[i][j]=max(pheromon[i][j],pheromon[j][i]);
 			pheromon[i][j]=pheromon[i][j]*evaporation+deltaPheromon[i][j];
+			pheromon[j][i]=pheromon[i][j];
 			deltaPheromon[i][j]=0;
+			deltaPheromon[j][i]=0;
 		}
 	}
 

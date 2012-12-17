@@ -11,7 +11,7 @@
 typedef vector<int> vi;
 
 const int steps = 150;
-const int L = 7000;
+const int L = 8000;
 
 vi sbest;
 int ebest;
@@ -52,12 +52,12 @@ double P(int delta, double T) {
 }
 
 double alfa(double t) {
-	const double b = 0.00024;
+	const double b = 0.0002005;
 
 	return t/(1+b*t);
 }
 
-int simulatedAnnealing(int **adjacencyMatrix, const int &n, vi &result) {
+int simulatedAnnealing2(int **adjacencyMatrix, const int &n, vi &result) {
 	srand(time(0));
 	vi s;
 
@@ -71,7 +71,7 @@ int simulatedAnnealing(int **adjacencyMatrix, const int &n, vi &result) {
 	vi snew;
 	int enew;
 
-	double t = 100000000;
+	double t = 10000000000000000;
 
 	REP(k,steps) {
 		REP(j,L) {
@@ -100,4 +100,19 @@ int simulatedAnnealing(int **adjacencyMatrix, const int &n, vi &result) {
 
 	result = sbest;
 	return ebest;
+}
+
+int repets = 7;
+
+int simulatedAnnealing(int **adjacencyMatrix, const int &n, vi &result) {
+	int bestres = 1e9;
+	while (repets--) {
+		vi tmpvec;
+		int tmp = simulatedAnnealing2(adjacencyMatrix, n, tmpvec);
+		if (bestres > tmp) {
+			bestres = tmp;
+			result = tmpvec;
+		}
+	}
+	return bestres;
 }

@@ -9,7 +9,7 @@
 #define FOR(i,k,n) for (int(i)=(k); (i)<=(n); (i)++)
 #define INF 1e9
 
-const int population_size = 6100;
+const int population_size = 6500;
 const int new_population_size = 3500;
 const int steps = 2500;
 
@@ -49,12 +49,8 @@ void generate(const int &n, int **adjacencyMatrix) {
 		population.push_back(make_pair(tmp,calculate(tmp,n,adjacencyMatrix)));
 		random_shuffle(population[i].first.begin(), population[i].first.end());
 	}
-	
-	/*printf("Population:\n");
-	REP(i,population_size) {
-		_print(population[i].first);
-	}*/
-	
+	tmp2.clear();
+	tmp3.clear();
 	tmp2.reserve(n);
 	tmp3.reserve(n);
 	REP(i,n) {
@@ -67,7 +63,6 @@ void inversion_mutation(vi &v, const int &n) {
 	int l = rand() % n;
 	int r = l + rand() % (n-l);
 	
-	//printf("Inversion mutation [%d, %d]\n", l, r);
 	reverse(v.begin()+l, v.begin()+r+1);
 	
 }
@@ -98,65 +93,6 @@ void displacement_mutation(vi &v, const int &n) {
 	}	
 }
 
-void scramble_mutation(vi &v, const int &n) { // tu gdzieś jest bug powodujący runtime error
-	int k = rand() % n;
-	random_shuffle(tmp.begin(), tmp.end());
-	//printf("Scramble mutation %d: ", k);
-	REP(i,k) {
-		//printf("%d ", tmp[i]);
-		tmp2[i] = tmp[i];
-	}
-	random_shuffle(tmp2.begin(), tmp2.begin()+k);
-	tmp3 = v;
-	REP(i,k) {
-		//printf("%d->%d ", tmp[i], tmp2[i]);
-		v[tmp[i]] = tmp3[tmp2[i]];
-	}
-	//printf("\n");	
-}
-
-/*vi PMX(vi &p1, vi &p2, const int &n) {
-	vi res;
-	res.resize(n);
-	int l = rand() % n;
-	int r = l + rand() % (n-l);
-	
-	bool *taken = new bool[n];
-	memset(taken,0,n*sizeof(bool*));
-	
-	FOR(i,l,r) {
-		res[i] = p1[i];
-		taken[res[i]] = true;
-	}
-	
-	FOR(i,l,r) {
-		if (!taken[p2[i]]) {
-			int k = i;
-			while (posIn2[p1[k]] >= l && posIn2[pi[k]]
-		}	
-	}
-		
-	return res;
-}*/
-
-vi adaptation;
-
-double calc_adaptation() {
-	double res = 0.0;
-	int n = population.size();
-	adaptation.resize(n);
-	int _max = -1;
-	
-	REP(i,n) {
-		_max = max(_max, population[i].second);
-	}
-	REP(i,n) {
-		adaptation[i] = 2*_max - population[i].second;
-		res += adaptation[i];
-	}
-	return res;
-}
-
 vi OX(vi &p1, vi &p2, const int &n) {
 	vi res;
 	res.resize(n);
@@ -178,32 +114,15 @@ vi OX(vi &p1, vi &p2, const int &n) {
 		res[k%n] = p2[pos++%n];
 	}
 	
-	//printf("OX crossing %d %d\n", l, r);
-	//_print(res);
-	
-	return res;
-}
+	delete [] taken;
 
-void crossover(const int &n, int **adjacencyMatrix) {
-	int a,b;
-	int pop_size = population.size();
-	REP(i,population_size-pop_size) {
-		a = rand()%pop_size;
-		b = rand()%pop_size;
-		while (a == b) {b++;b%=pop_size;}
-		//printf("a:%d b:%d\n", a, b);
-		//_print(population[a].first);
-		vi c = OX(population[a].first, population[b].first, n);
-		population.push_back(make_pair(c,calculate(c,n,adjacencyMatrix)));
-		//c = OX(population[b].first, population[a].first, n);
-		//population.push_back(make_pair(c,calculate(c,n,adjacencyMatrix)));
-	}
+	return res;
 }
 
 vi bestpopulation;
 int bestresult;
 
-void selection(const int &n, int **adjacencyMatrix) { // na razie metoda własna :D (1/4 najlepszych + 1/4 ruletka + nie mogą się powtarzać)	
+void selection(const int &n, int **adjacencyMatrix) {
 	sort(population.begin(), population.end(), cmp);
 
 	if (population[0].second < bestresult) {
@@ -231,13 +150,10 @@ void selection(const int &n, int **adjacencyMatrix) { // na razie metoda własna
 }
 
 void mutation(vi &v, const int &n) {
-
 		double prob = (double)rand() / RAND_MAX;
 		if (prob > 0.7) inversion_mutation(v, n);
 		else if (prob > 0.4) swap_mutation(v, n);
 		else displacement_mutation(v, n);
-		//else if (prob > 0.4) scramble_mutation(population[i].first, n);					
-	
 }
 
 void judge(const int &n, int **adjacencyMatrix) {
@@ -250,7 +166,6 @@ void reproduction(const int &n, int **adjacencyMatrix) {
 		int b = rand()%population_size;
 		while (a==b) b = rand()%population_size;
 
-		double r = (double)rand()/RAND_MAX;
 		double r1 = (double)rand()/RAND_MAX/10;
 		double r2 = (double)rand()/RAND_MAX/10;
 		
@@ -264,10 +179,9 @@ void reproduction(const int &n, int **adjacencyMatrix) {
 		random_shuffle(v1.begin(), v1.end());
 		random_shuffle(v2.begin(), v2.end());
 
-		if ((double)rand()/RAND_MAX <= r) {
-			v1 = OX(population[a].first, population[b].first, n);
-			v2 = OX(population[b].first, population[a].first, n);			
-		}
+		v1 = OX(population[a].first, population[b].first, n);
+		v2 = OX(population[b].first, population[a].first, n);			
+		
 		if ((double)rand()/RAND_MAX <= r1) {
 			mutation(v1, n);
 		}
@@ -296,15 +210,6 @@ int GA(int **adjacencyMatrix, const int &n, vi &result) {
 		selection(n, adjacencyMatrix);
 		
 		reproduction(n, adjacencyMatrix);
-
-		/*crossover(n, adjacencyMatrix);
-		
-		mutation(n, adjacencyMatrix);
-		*/
-		/*REP(i,population.size()) {
-			printf("i%d: ", i);
-			_print(population[i].first);
-		}*/		
 	}
 	REP(i,(int)population.size()) {
 		if (population[i].second < bestresult) {
@@ -313,8 +218,6 @@ int GA(int **adjacencyMatrix, const int &n, vi &result) {
 		}
 	}
 
-//	printf("%d\n", (int)population.size());
-	
 	result = bestpopulation; 
 	
 	return bestresult;

@@ -10,7 +10,7 @@
 
 #define INF 1e9
 /* best results for numOfAnts = number of cities */
-const int numOfAnts = 5; 
+const int numOfAnts = 15; 
 const int steps = 100;
 /* used in counting the probability of selecting edge */
 const double alfa = 1;

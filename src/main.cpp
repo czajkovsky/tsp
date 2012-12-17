@@ -33,9 +33,11 @@ int main() {
 	printf("Brute Force: %d\n", bF);
 	*/
 
+	/*
 	int nN = nearestNeighbour(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Nearest Neighbour: %d\n", nN);
+	*/
 
 	/*
 	int gA = GA(adjacencyMatrix, n, result);
@@ -43,24 +45,28 @@ int main() {
 	printf("Genetic Algorithm: %d\n", gA);
 	*/
 
+	/*
 	int aC = antColony(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Ant Colony: %d\n", aC);
+	*/
 
 	/*
 	int sA = simulatedAnnealing(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Simulated Annealing: %d\n", sA);
 	*/
 
+	
 	int fI = farthestInsertion(adjacencyMatrix, n, result);
-	print(result);
+	//print(result);
 	printf("Farthest Insertion: %d\n", fI);
+	
 
 	for (int i=0; i<n; i++) {
-		delete [ ] adjacencyMatrix[i];
+		delete [] adjacencyMatrix[i];
 	}
-	delete [ ] adjacencyMatrix;
+	delete [] adjacencyMatrix;
 	
 	return 0;
 }

@@ -1,4 +1,4 @@
-#include "antColony.h"
+#include "farthestInsertion.h"
 #include <cstring>
 #include <cstdio>
 #include <vector>
@@ -11,7 +11,6 @@
 #include <deque>
 
 #define INF 1e9
-//vector<int> vis;
 int visited[100000];
 deque<int> tour;
 
@@ -37,7 +36,7 @@ int findFarthestGlobal(int **adjacencyMatrix, const int &n) {
 			farthest=candidate;
 		}
 	}
-	return candidate;
+	return farthest;
 }
 void printMatrix(int **adjacencyMatrix,const int &n) {
 	for(int i=0; i<n; i++) {
